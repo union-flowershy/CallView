@@ -1,7 +1,9 @@
 package com.example.callview
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -10,12 +12,14 @@ import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
 import java.io.DataInputStream
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.Socket
 
 
-open class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
+    var socket: Socket? = null
     lateinit var v_fllipper: ViewFlipper
     lateinit var textBox: TextView
     lateinit var textHide1: TextView
@@ -25,7 +29,7 @@ open class MainActivity : AppCompatActivity() {
     lateinit var textHide5: TextView
     lateinit var textHide6: TextView
 
-open override fun onCreate(savedInstanceState: Bundle?) {
+override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //가로모드고정
@@ -57,6 +61,10 @@ open override fun onCreate(savedInstanceState: Bundle?) {
             thread()
     }
 
+    init {
+        this.socket = socket
+    }
+
     fun thread() {
         val thread: Thread = NetworkThread()
         Log.e("소켓연결 확인", thread.toString())
@@ -65,40 +73,56 @@ open override fun onCreate(savedInstanceState: Bundle?) {
     }
 
     inner class NetworkThread: Thread() {
+        @SuppressLint("SuspiciousIndentation")
         override fun run() = try {
-                val socket = Socket("192.168.10.19", 55555)
-                val input = socket.getInputStream()
-                val reader: BufferedReader = BufferedReader(InputStreamReader(input))
-                val dis = DataInputStream(input)
-                var identify: Boolean = false
-                var readValue: String
-                var orderNum: String
-//                    val orderNum = dis.readUTF()
-//                    Log.e("test", dis.toString())
-
-//            while((dis.readUTF()) != null) {
-//                while((readValue = reader.readLine().toString()) != null) {
-//                Log.e("데이터 읽기", reader.toString())
-//                if (!identify) {    // 연결 후 한 번만 호출
-//                    orderNum = reader.readLine()    //주문번호 저장
-//                    identify = true;
-//                    runOnUiThread {
-//                        textBox.append("orderNum :  ${orderNum}\n")
-////                           socket.close()
-//                    }
-//                    continue;
-//                }else {}
-//
-//            }
-
-
-
+            val input: InputStream = socket!!.getInputStream()
+            val reader: BufferedReader = BufferedReader(InputStreamReader(input))
+            var orderNum: String
+            while(true) {
+                    orderNum = reader.readLine()
+                            runOnUiThread {
+                            textBox.append("${orderNum}")
+                            }
+            }
 
         }catch(e: Exception) {
             e.printStackTrace()
         }
     }
 
+//    inner class NetworkThread: Thread() {
+//        override fun run() = try {
+//            //val socket = Socket("192.168.10.19", 55555)
+//            val socket = Socket("192.168.1.164", 55555)
+//            val input = socket.getInputStream()
+//            val reader: BufferedReader = BufferedReader(InputStreamReader(input))
+//            val dis = DataInputStream(input)
+//            var identify: Boolean = false
+//            var readValue: String
+//            val orderNum = dis.readUTF()
+//            Log.e("test", dis.toString())
+//
+//            while ((dis.readUTF()) != null) {
+//                while ((readValue = reader.toString()) != null) {
+//                    Log.e("데이터 읽기", reader.toString())
+//                    if (!identify) {    // 연결 후 한 번만 호출
+//                        orderNum = reader.readLine()    //주문번호 저장
+//                        identify = true;
+//                        runOnUiThread {
+//                            textBox.append("orderNum :  ${orderNum}\n")
+////                           socket.close()
+//                        }
+//                        continue;
+//                    } else {
+//                    }
+//
+//                }
+//
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
     private fun textBox() {
         textBox.setText("100")
         textHide1.setText("")
