@@ -18,6 +18,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
     </ViewFlipper>
 
     <TextView
@@ -197,5 +198,21 @@
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.05" />
+
+    <TextView
+        android:id="@+id/mainNum"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        android:background=""
+        android:fontFamily="@font/btro"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/image_slide"
+        app:layout_constraintEnd_toEndOf="@+id/image_slide"
+        app:layout_constraintStart_toStartOf="@+id/image_slide"
+        app:layout_constraintTop_toTopOf="@+id/image_slide" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

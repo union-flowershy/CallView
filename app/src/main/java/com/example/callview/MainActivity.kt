@@ -19,7 +19,6 @@ import java.net.Socket
 
 class MainActivity : AppCompatActivity() {
 
-    var socket: Socket? = null
     lateinit var v_fllipper: ViewFlipper
     lateinit var textBox: TextView
     lateinit var textHide1: TextView
@@ -61,10 +60,6 @@ override fun onCreate(savedInstanceState: Bundle?) {
             thread()
     }
 
-    init {
-        this.socket = socket
-    }
-
     fun thread() {
         val thread: Thread = NetworkThread()
         Log.e("소켓연결 확인", thread.toString())
@@ -75,14 +70,35 @@ override fun onCreate(savedInstanceState: Bundle?) {
     inner class NetworkThread: Thread() {
         @SuppressLint("SuspiciousIndentation")
         override fun run() = try {
-            val input: InputStream = socket!!.getInputStream()
+            val socket: Socket = Socket("192.168.10.19", 55555)
+            var input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
             while(true) {
                     orderNum = reader.readLine()
-                            runOnUiThread {
-                            textBox.append("${orderNum}")
-                            }
+//                            runOnUiThread {
+//                            textBox.append(orderNum)
+//                            }
+                                runOnUiThread{
+                                    if(textBox.getText().toString() == "") {
+                                        textBox.append(orderNum)
+                                    } else if(textHide1.getText().toString() == "") {
+                                        textHide1.append(orderNum)
+                                    } else if(textHide2.getText().toString() == "") {
+                                        textHide2.append(orderNum)
+                                    } else if(textHide3.getText().toString() == "") {
+                                        textHide3.append(orderNum)
+                                    } else if(textHide4.getText().toString() == "") {
+                                        textHide4.append(orderNum)
+                                    } else if(textHide5.getText().toString() == "") {
+                                        textHide5.append(orderNum)
+                                    } else {
+
+                                        textHide6.append(orderNum)
+                                        Log.e("HIde6 확인 = ", textHide6.toString())
+
+                                    }
+                                }
             }
 
         }catch(e: Exception) {
@@ -90,47 +106,14 @@ override fun onCreate(savedInstanceState: Bundle?) {
         }
     }
 
-//    inner class NetworkThread: Thread() {
-//        override fun run() = try {
-//            //val socket = Socket("192.168.10.19", 55555)
-//            val socket = Socket("192.168.1.164", 55555)
-//            val input = socket.getInputStream()
-//            val reader: BufferedReader = BufferedReader(InputStreamReader(input))
-//            val dis = DataInputStream(input)
-//            var identify: Boolean = false
-//            var readValue: String
-//            val orderNum = dis.readUTF()
-//            Log.e("test", dis.toString())
-//
-//            while ((dis.readUTF()) != null) {
-//                while ((readValue = reader.toString()) != null) {
-//                    Log.e("데이터 읽기", reader.toString())
-//                    if (!identify) {    // 연결 후 한 번만 호출
-//                        orderNum = reader.readLine()    //주문번호 저장
-//                        identify = true;
-//                        runOnUiThread {
-//                            textBox.append("orderNum :  ${orderNum}\n")
-////                           socket.close()
-//                        }
-//                        continue;
-//                    } else {
-//                    }
-//
-//                }
-//
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
     private fun textBox() {
-        textBox.setText("100")
+        textBox.setText("")
         textHide1.setText("")
-        textHide2.setText("테스트2")
-        textHide3.setText("테스트3")
-        textHide4.setText("테스트4")
-        textHide5.setText("테스트5")
-        textHide6.setText("테스트6")
+        textHide2.setText("")
+        textHide3.setText("")
+        textHide4.setText("")
+        textHide5.setText("")
+        textHide6.setText("")
     }
 
     private fun textHide() {
