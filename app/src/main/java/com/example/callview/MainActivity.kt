@@ -1,11 +1,16 @@
 package com.example.callview
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -15,6 +20,8 @@ import java.io.DataInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.Socket
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,8 +34,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var textHide4: TextView
     lateinit var textHide5: TextView
     lateinit var textHide6: TextView
+    lateinit var mainNum: TextView
+    lateinit var mainNum2: TextView
+    lateinit var anime: Animation
+    lateinit var rightout: Animation
+    var mHandler: Handler = Handler()
 
-override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //가로모드고정
@@ -42,8 +54,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
         textHide4 = findViewById(R.id.textView4)
         textHide5 = findViewById(R.id.textView5)
         textHide6 = findViewById(R.id.textView6)
+        mainNum = findViewById<TextView>(R.id.mainNum)
+        mainNum2 = findViewById<TextView>(R.id.mainNum2)
 
-        val images = intArrayOf (
+        val images = intArrayOf(
             R.drawable.coffee1,
             R.drawable.coffee2,
             R.drawable.coffee3
@@ -56,8 +70,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
         }
 
         textBox()
-//        textHide()
-            thread()
+        textHide()
+        thread()
     }
 
     fun thread() {
@@ -74,23 +88,48 @@ override fun onCreate(savedInstanceState: Bundle?) {
             var input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
+            anime = AnimationUtils.loadAnimation(this@MainActivity,R.anim.textanimation)
+            rightout = AnimationUtils.loadAnimation(this@MainActivity,R.anim.rightout)
             while(true) {
                     orderNum = reader.readLine()
-//                            runOnUiThread {
-//                            textBox.append(orderNum)
-//                            }
                                 runOnUiThread{
-                                    if(textBox.getText().toString() == "") {
-                                        textBox.append(orderNum)
-                                    } else if(textHide1.getText().toString() == "") {
+                                    if(mainNum2.text.toString() == "") {
+                                        mainNum2.append(orderNum)
+                                        mainNum.visibility = View.VISIBLE
+                                        mainNum2.visibility = View.VISIBLE
+                                        mainNum2.startAnimation(anime)
+
+                                        Timer().schedule(4000) {
+                                            mainNum.startAnimation(rightout)
+                                            mainNum2.startAnimation(rightout)
+
+                                            mHandler.postDelayed(Runnable {
+                                                run() {
+                                                    mainNum.visibility = View.GONE
+//                                                    mainNum2.visibility = View.GONE
+                                                    mainNum.text = ""
+                                                    mainNum2.text = ""
+
+                                                }
+                                            }, 1000)
+                                        }
+                                            mHandler.postDelayed(Runnable {
+                                                run() {
+                                                    if(textBox.text.toString() == "") {
+                                                        textBox.append(orderNum)
+                                                    }else {}
+                                                }
+                                            }, 5500)
+
+                                    } else if(textHide1.text.toString() == "") {
                                         textHide1.append(orderNum)
-                                    } else if(textHide2.getText().toString() == "") {
+                                    } else if(textHide2.text.toString() == "") {
                                         textHide2.append(orderNum)
-                                    } else if(textHide3.getText().toString() == "") {
+                                    } else if(textHide3.text.toString() == "") {
                                         textHide3.append(orderNum)
-                                    } else if(textHide4.getText().toString() == "") {
+                                    } else if(textHide4.text.toString() == "") {
                                         textHide4.append(orderNum)
-                                    } else if(textHide5.getText().toString() == "") {
+                                    } else if(textHide5.text.toString() == "") {
                                         textHide5.append(orderNum)
                                     } else {
 
@@ -107,22 +146,27 @@ override fun onCreate(savedInstanceState: Bundle?) {
     }
 
     private fun textBox() {
-        textBox.setText("")
-        textHide1.setText("")
-        textHide2.setText("")
-        textHide3.setText("")
-        textHide4.setText("")
-        textHide5.setText("")
-        textHide6.setText("")
+        textBox.text = ""
+        textHide1.text = ""
+        textHide2.text = ""
+        textHide3.text = ""
+        textHide4.text = ""
+        textHide5.text = ""
+        textHide6.text = ""
+
+
     }
 
     private fun textHide() {
-        textHide1.setVisibility(View.INVISIBLE );
-        textHide2.setVisibility(View.INVISIBLE );
-        textHide3.setVisibility(View.INVISIBLE );
-        textHide4.setVisibility(View.INVISIBLE );
-        textHide5.setVisibility(View.INVISIBLE );
-        textHide6.setVisibility(View.INVISIBLE );
+        textHide1.setVisibility(View.INVISIBLE )
+        textHide2.setVisibility(View.INVISIBLE )
+        textHide3.setVisibility(View.INVISIBLE )
+        textHide4.setVisibility(View.INVISIBLE )
+        textHide5.setVisibility(View.INVISIBLE )
+        textHide6.setVisibility(View.INVISIBLE )
+        mainNum.setVisibility(View.GONE)
+        mainNum2.setVisibility(View.GONE)
+
     }
 
     // 이미지 슬라이더 구현 메서드
