@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -85,13 +86,15 @@ class MainActivity : AppCompatActivity() {
             var input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
+            val resetText: String = reader.readLine().trim()
             anime = AnimationUtils.loadAnimation(this@MainActivity,R.anim.textanimation)
             rightout = AnimationUtils.loadAnimation(this@MainActivity,R.anim.rightout)
             while(true) {
                     orderNum = reader.readLine()
                                 runOnUiThread{
+                                if(!orderNum.toString().equals("reset")) {
                                     if(mainNum2.text.toString() == "") {
-                                        mainNum2.append(orderNum)
+                                        mainNum2.append(orderNum.toString())
                                         mainNum.visibility = View.VISIBLE
                                         mainNum2.visibility = View.VISIBLE
                                         mainNum2.startAnimation(anime)
@@ -113,19 +116,19 @@ class MainActivity : AppCompatActivity() {
                                               mHandler.postDelayed(Runnable {
                                                 run() {
                                                     if(textBox.text.toString() == "") {
-                                                        textBox.append(orderNum)
+                                                        textBox.append(orderNum.toString())
                                                     }else if(textHide1.text.toString() == "" && textHide2.text.toString() == ""){
                                                     textHide1.append(textBox.text)
                                                     textHide1.visibility = View.VISIBLE
                                                     textBox.text = ""
-                                                    textBox.append(orderNum)
+                                                    textBox.append(orderNum.toString())
                                                 }else if(textHide1.text.toString() != null && textHide2.text.toString() == ""){
                                                     textHide2.append(textHide1.text)
                                                     textHide2.visibility = View.VISIBLE
                                                     textHide1.text = ""
                                                     textHide1.append(textBox.text)
                                                     textBox.text = ""
-                                                    textBox.append(orderNum)
+                                                    textBox.append(orderNum.toString())
                                                 }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() == ""){
                                                         textHide3.append(textHide2.text)
                                                         textHide3.visibility = View.VISIBLE
@@ -134,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                                                         textHide1.text = ""
                                                         textHide1.append(textBox.text)
                                                         textBox.text = ""
-                                                        textBox.append(orderNum)
+                                                        textBox.append(orderNum.toString())
                                                 }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() == ""){
                                                         textHide4.append(textHide3.text)
                                                         textHide4.visibility = View.VISIBLE
@@ -145,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                                                         textHide1.text = ""
                                                         textHide1.append(textBox.text)
                                                         textBox.text = ""
-                                                        textBox.append(orderNum)
+                                                        textBox.append(orderNum.toString())
                                                 }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() != null && textHide5.text.toString() == ""){
                                                         textHide5.append(textHide4.text)
                                                         textHide5.visibility = View.VISIBLE
@@ -158,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                                                         textHide1.text = ""
                                                         textHide1.append(textBox.text)
                                                         textBox.text = ""
-                                                        textBox.append(orderNum)
+                                                        textBox.append(orderNum.toString())
                                                 }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() != null && textHide5.text.toString() != null && textHide6.text.toString() ==""){
                                                         textHide6.append(textHide5.text)
                                                         textHide6.visibility = View.VISIBLE
@@ -173,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                                                         textHide1.text = ""
                                                         textHide1.append(textBox.text)
                                                         textBox.text = ""
-                                                        textBox.append(orderNum)
+                                                        textBox.append(orderNum.toString())
                                                     }else {
 
                                                     }
@@ -181,24 +184,25 @@ class MainActivity : AppCompatActivity() {
                                             }, 5500)
 
                                     } else if(textHide1.text.toString() == "") {
-                                        textHide1.append(orderNum)
+                                        textHide1.append(orderNum.toString())
                                     } else if(textHide2.text.toString() == "") {
-                                        textHide2.append(orderNum)
+                                        textHide2.append(orderNum.toString())
                                     } else if(textHide3.text.toString() == "") {
-                                        textHide3.append(orderNum)
+                                        textHide3.append(orderNum.toString())
                                     } else if(textHide4.text.toString() == "") {
-                                        textHide4.append(orderNum)
+                                        textHide4.append(orderNum.toString())
                                     } else if(textHide5.text.toString() == "") {
-                                        textHide5.append(orderNum)
+                                        textHide5.append(orderNum.toString())
                                     } else {
-
-                                        textHide6.append(orderNum)
+                                        textHide6.append(orderNum.toString())
                                         Log.e("HIde6 확인 = ", textHide6.toString())
-
                                     }
+                                } else {
+                                    textBox()
+                                    textHide()
                                 }
+                }
             }
-
         }catch(e: Exception) {
             e.printStackTrace()
         }
