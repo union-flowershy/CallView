@@ -4,5 +4,11 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/btro"/>
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/cafe24ssurround"
+        />
+
 
 </font-family>

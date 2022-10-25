@@ -1,14 +1,11 @@
 package com.example.callview
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
-import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -16,7 +13,6 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
-import java.io.DataInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.Socket
@@ -84,7 +80,8 @@ class MainActivity : AppCompatActivity() {
     inner class NetworkThread: Thread() {
         @SuppressLint("SuspiciousIndentation")
         override fun run() = try {
-            val socket: Socket = Socket("192.168.10.19", 55555)
+//            val socket: Socket = Socket("192.168.10.19", 55555)
+            val socket: Socket = Socket("192.168.1.164", 55555)
             var input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
@@ -113,11 +110,73 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }, 1000)
                                         }
-                                            mHandler.postDelayed(Runnable {
+                                              mHandler.postDelayed(Runnable {
                                                 run() {
                                                     if(textBox.text.toString() == "") {
                                                         textBox.append(orderNum)
-                                                    }else {}
+                                                    }else if(textHide1.text.toString() == "" && textHide2.text.toString() == ""){
+                                                    textHide1.append(textBox.text)
+                                                    textHide1.visibility = View.VISIBLE
+                                                    textBox.text = ""
+                                                    textBox.append(orderNum)
+                                                }else if(textHide1.text.toString() != null && textHide2.text.toString() == ""){
+                                                    textHide2.append(textHide1.text)
+                                                    textHide2.visibility = View.VISIBLE
+                                                    textHide1.text = ""
+                                                    textHide1.append(textBox.text)
+                                                    textBox.text = ""
+                                                    textBox.append(orderNum)
+                                                }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() == ""){
+                                                        textHide3.append(textHide2.text)
+                                                        textHide3.visibility = View.VISIBLE
+                                                        textHide2.text = ""
+                                                        textHide2.append(textHide1.text)
+                                                        textHide1.text = ""
+                                                        textHide1.append(textBox.text)
+                                                        textBox.text = ""
+                                                        textBox.append(orderNum)
+                                                }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() == ""){
+                                                        textHide4.append(textHide3.text)
+                                                        textHide4.visibility = View.VISIBLE
+                                                        textHide3.text = ""
+                                                        textHide3.append(textHide2.text)
+                                                        textHide2.text = ""
+                                                        textHide2.append(textHide1.text)
+                                                        textHide1.text = ""
+                                                        textHide1.append(textBox.text)
+                                                        textBox.text = ""
+                                                        textBox.append(orderNum)
+                                                }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() != null && textHide5.text.toString() == ""){
+                                                        textHide5.append(textHide4.text)
+                                                        textHide5.visibility = View.VISIBLE
+                                                        textHide4.text = ""
+                                                        textHide4.append(textHide3.text)
+                                                        textHide3.text = ""
+                                                        textHide3.append(textHide2.text)
+                                                        textHide2.text = ""
+                                                        textHide2.append(textHide1.text)
+                                                        textHide1.text = ""
+                                                        textHide1.append(textBox.text)
+                                                        textBox.text = ""
+                                                        textBox.append(orderNum)
+                                                }else if(textHide1.text.toString() != null && textHide2.text.toString() != null && textHide3.text.toString() != null && textHide4.text.toString() != null && textHide5.text.toString() != null && textHide6.text.toString() ==""){
+                                                        textHide6.append(textHide5.text)
+                                                        textHide6.visibility = View.VISIBLE
+                                                        textHide5.text = ""
+                                                        textHide5.append(textHide4.text)
+                                                        textHide4.text = ""
+                                                        textHide4.append(textHide3.text)
+                                                        textHide3.text = ""
+                                                        textHide3.append(textHide2.text)
+                                                        textHide2.text = ""
+                                                        textHide2.append(textHide1.text)
+                                                        textHide1.text = ""
+                                                        textHide1.append(textBox.text)
+                                                        textBox.text = ""
+                                                        textBox.append(orderNum)
+                                                    }else {
+
+                                                    }
                                                 }
                                             }, 5500)
 
