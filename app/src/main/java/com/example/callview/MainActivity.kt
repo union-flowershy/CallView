@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //가로모드고정
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         setContentView(R.layout.activity_main)
 
         textBox = findViewById<TextView>(R.id.orderNum)
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         thread()
     }
 
-    fun thread() {
+    private fun thread() {
         val thread: Thread = NetworkThread()
         Log.e("소켓연결 확인", thread.toString())
         thread.start()
@@ -81,8 +81,8 @@ class MainActivity : AppCompatActivity() {
     inner class NetworkThread: Thread() {
         @SuppressLint("SuspiciousIndentation")
         override fun run() = try {
-//            val socket: Socket = Socket("192.168.10.19", 55555)
-            val socket: Socket = Socket("192.168.1.164", 55555)
+            val socket: Socket = Socket("192.168.10.19", 55555)
+//            val socket: Socket = Socket("192.168.1.164", 55555)
             var input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
@@ -208,40 +208,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun textBox() {
-        textBox.text = ""
-        textHide1.text = ""
-        textHide2.text = ""
-        textHide3.text = ""
-        textHide4.text = ""
-        textHide5.text = ""
-        textHide6.text = ""
+        private fun textBox() {
+            textBox.text = ""
+            textHide1.text = ""
+            textHide2.text = ""
+            textHide3.text = ""
+            textHide4.text = ""
+            textHide5.text = ""
+            textHide6.text = ""
+        }
 
+        private fun textHide() {
+            textHide1.visibility = View.INVISIBLE
+            textHide2.visibility = View.INVISIBLE
+            textHide3.visibility = View.INVISIBLE
+            textHide4.visibility = View.INVISIBLE
+            textHide5.visibility = View.INVISIBLE
+            textHide6.visibility = View.INVISIBLE
+            mainNum.visibility = View.GONE
+            mainNum2.visibility = View.GONE
 
-    }
+        }
 
-    private fun textHide() {
-        textHide1.setVisibility(View.INVISIBLE )
-        textHide2.setVisibility(View.INVISIBLE )
-        textHide3.setVisibility(View.INVISIBLE )
-        textHide4.setVisibility(View.INVISIBLE )
-        textHide5.setVisibility(View.INVISIBLE )
-        textHide6.setVisibility(View.INVISIBLE )
-        mainNum.setVisibility(View.GONE)
-        mainNum2.setVisibility(View.GONE)
-
-    }
-
-    // 이미지 슬라이더 구현 메서드
-
+        // 이미지 슬라이더 구현 메서드
         private fun fllipperImages(image: Int) {
             val imageView = ImageView(this)
             imageView.setBackgroundResource(image);
-
             v_fllipper.addView(imageView);      // 이미지 추가
-            v_fllipper.setFlipInterval(3000);       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
-            v_fllipper.setAutoStart(true);          // 자동 시작 유무 설정
-
+            v_fllipper.flipInterval = 3000;       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
+            v_fllipper.isAutoStart = true;          // 자동 시작 유무 설정
             // animation
             v_fllipper.setInAnimation(this,android.R.anim.slide_in_left);
             v_fllipper.setOutAnimation(this,android.R.anim.slide_out_right)
