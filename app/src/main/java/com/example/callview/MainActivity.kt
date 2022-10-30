@@ -55,9 +55,11 @@ class MainActivity : AppCompatActivity() {
         mainNum2 = findViewById<TextView>(R.id.mainNum2)
 
         val images = intArrayOf(
-            R.drawable.coffee1,
-            R.drawable.coffee2,
-            R.drawable.coffee3
+            R.drawable.did_img1,
+            R.drawable.did_img2,
+            R.drawable.did_img3,
+            R.drawable.did_img4,
+            R.drawable.did_img5
         )
 
         v_fllipper = findViewById<View>(R.id.image_slide) as ViewFlipper
