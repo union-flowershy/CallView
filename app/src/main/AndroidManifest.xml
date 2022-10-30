@@ -14,8 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CallView"
         tools:targetApi="31">
+
+        <activity android:name=".MainActivity"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity2"
             android:screenOrientation="sensorLandscape"
             android:exported="true">
             <intent-filter>
