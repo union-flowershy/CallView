@@ -1,6 +1,8 @@
 package com.example.callview
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
@@ -18,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main2.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.PrintWriter
 import java.net.Socket
 import java.util.*
 import kotlin.concurrent.schedule
@@ -66,8 +69,8 @@ class MainActivity2 : AppCompatActivity() {
     }
         // 이미지 슬라이더 구현 메서드
     private fun fllipperImages(image: Int) {
-        val imageView = ImageView(this)
-            imageView.setBackgroundResource(image);
+        val imageView: ImageView = ImageView(this)
+            imageView.setBackgroundResource(image)
             v_fllipper.addView(imageView);      // 이미지 추가
             v_fllipper.flipInterval = 3000;       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
             v_fllipper.isAutoStart = true;          // 자동 시작 유무 설정
@@ -84,24 +87,38 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     inner class NetworkThread: Thread() {
-
         override fun run() = try {
-            val socket: Socket = Socket("192.168.10.19", 55555)
-//            val socket: Socket = Socket("192.168.1.164", 55555)
+//            val socket: Socket = Socket("192.168.10.19", 55555)
+            val socket: Socket = Socket("192.168.1.164", 55555)
+            val output = socket.getOutputStream()
             val input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
                 while(true) {
-                    orderNum = reader.readLine()
-                    list.add(orderNum)
-                    Log.e(orderNum.toString(), "orderNum 테스트")
-                    Log.e(list.toString(), "list 테스트")
-                    recyclerView.adapter = MyAdapter(this@MainActivity2, list)
+                    orderNum = reader.readLine().trim()
+                    if(!list.contains(orderNum)) {
+                        list.add(orderNum)
+                        Log.e(list.toString(), "list")
+                        Log.e(orderNum.toString(), "orderNum")
+                        runOnUiThread {
+                            setRecyclerView()
+                        }
+                    } else {
+                        val writer: PrintWriter = PrintWriter(output, true)
+                        writer.println("overlap")
+                        //여기까지 작업하다 말음 오버랩 뜸.
+                    }
+
+
+
                 }
         } catch(e: Exception) {
             e.printStackTrace()
         }
+    }
 
+    fun setRecyclerView() {
+        recyclerView.adapter = MyAdapter(this, list)
     }
 
 }
