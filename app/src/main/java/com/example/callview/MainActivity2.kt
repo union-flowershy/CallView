@@ -12,7 +12,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main2.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -23,11 +25,20 @@ import kotlin.concurrent.schedule
 
 class MainActivity2 : AppCompatActivity() {
 
+    var list: ArrayList<String> = ArrayList()
     lateinit var v_fllipper: ViewFlipper
     var mHandler: Handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val textBox = findViewById<TextView>(R.id.textBox)
+
+//        var list: ArrayList<String> = ArrayList()
+//        for(i in 1 until 10) {
+//            list.add(String.format("TEXT %d", i))
+//            Log.e(i.toString(), "번째 작동")
+//        }
 
         //가로모드고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
@@ -47,11 +58,15 @@ class MainActivity2 : AppCompatActivity() {
             fllipperImages(image)
         }
 
-    }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        Log.e(list.toString(), "Adapter로 넘어가기 전 list의 수")
 
+        thread()
+
+    }
         // 이미지 슬라이더 구현 메서드
-        private fun fllipperImages(image: Int) {
-            val imageView = ImageView(this)
+    private fun fllipperImages(image: Int) {
+        val imageView = ImageView(this)
             imageView.setBackgroundResource(image);
             v_fllipper.addView(imageView);      // 이미지 추가
             v_fllipper.flipInterval = 3000;       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
@@ -59,6 +74,34 @@ class MainActivity2 : AppCompatActivity() {
             // animation
             v_fllipper.setInAnimation(this,android.R.anim.slide_in_left);
             v_fllipper.setOutAnimation(this,android.R.anim.slide_out_right)
+    }
+
+    private fun thread() {
+        val thread: Thread = NetworkThread()
+        Log.e("소켓연결 확인", thread.toString())
+        thread.start()
+        Log.e("소켓연결 시작", thread.toString())
+    }
+
+    inner class NetworkThread: Thread() {
+
+        override fun run() = try {
+            val socket: Socket = Socket("192.168.10.19", 55555)
+//            val socket: Socket = Socket("192.168.1.164", 55555)
+            val input: InputStream = socket.getInputStream()
+            val reader: BufferedReader = BufferedReader(InputStreamReader(input))
+            var orderNum: String
+                while(true) {
+                    orderNum = reader.readLine()
+                    list.add(orderNum)
+                    Log.e(orderNum.toString(), "orderNum 테스트")
+                    Log.e(list.toString(), "list 테스트")
+                    recyclerView.adapter = MyAdapter(this@MainActivity2, list)
+                }
+        } catch(e: Exception) {
+            e.printStackTrace()
         }
+
+    }
 
 }

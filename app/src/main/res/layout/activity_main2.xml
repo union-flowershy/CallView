@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/black2"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
 
@@ -13,23 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imgv1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            />
-
-        <ImageView
-            android:id="@+id/imgv2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
         <ViewFlipper
             android:id="@+id/image_slide"
-            android:layout_width="606dp"
-            android:layout_height="match_parent"></ViewFlipper>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="@color/noColor2">
+        </ImageView>
+
+
+        <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5"
+        android:layout_gravity="right">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:background="@color/noColor2"/>
+
+        </LinearLayout>>
 
     </FrameLayout>
+
 </LinearLayout>
