@@ -25,6 +25,19 @@
             android:background="@color/noColor2">
         </ImageView>
 
+        <TextView
+            android:id="@+id/bottomText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="저희 매장을 찾아주셔서 감사합니다.    저희 매장을 찾아주셔서 감사합니다."
+            android:layout_gravity="bottom"
+            android:textSize="50sp"
+            android:gravity="center"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            />
+
 
         <LinearLayout
         android:layout_width="250dp"

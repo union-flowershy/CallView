@@ -42,6 +42,10 @@ class MainActivity2 : AppCompatActivity() {
 //            list.add(String.format("TEXT %d", i))
 //            Log.e(i.toString(), "번째 작동")
 //        }
+        
+        // 텍스트 슬라이드
+        val textSlide: TextView = findViewById(R.id.bottomText)
+            textSlide.isSelected = true
 
         //가로모드고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
@@ -70,13 +74,13 @@ class MainActivity2 : AppCompatActivity() {
         // 이미지 슬라이더 구현 메서드
     private fun fllipperImages(image: Int) {
         val imageView: ImageView = ImageView(this)
-            imageView.setBackgroundResource(image)
-            v_fllipper.addView(imageView);      // 이미지 추가
-            v_fllipper.flipInterval = 3000;       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
-            v_fllipper.isAutoStart = true;          // 자동 시작 유무 설정
-            // animation
-            v_fllipper.setInAnimation(this,android.R.anim.slide_in_left);
-            v_fllipper.setOutAnimation(this,android.R.anim.slide_out_right)
+                imageView.setBackgroundResource(image)
+                    v_fllipper.addView(imageView);      // 이미지 추가
+                    v_fllipper.flipInterval = 3000       // 자동 이미지 슬라이드 딜레이시간(1000 당 1초)
+                    v_fllipper.isAutoStart = true          // 자동 시작 유무 설정
+                    // animation
+                    v_fllipper.setInAnimation(this,android.R.anim.slide_in_left)
+                    v_fllipper.setOutAnimation(this,android.R.anim.slide_out_right)
     }
 
     private fun thread() {
@@ -88,32 +92,29 @@ class MainActivity2 : AppCompatActivity() {
 
     inner class NetworkThread: Thread() {
         override fun run() = try {
-//            val socket: Socket = Socket("192.168.10.19", 55555)
-            val socket: Socket = Socket("192.168.1.164", 55555)
+            val socket: Socket = Socket("192.168.10.19", 55555)
+//            val socket: Socket = Socket("192.168.1.164", 55555)
             val output = socket.getOutputStream()
             val input: InputStream = socket.getInputStream()
             val reader: BufferedReader = BufferedReader(InputStreamReader(input))
             var orderNum: String
                 while(true) {
-                    orderNum = reader.readLine().trim()
-                    if(!list.contains(orderNum)) {
-                        list.add(orderNum)
-                        Log.e(list.toString(), "list")
-                        Log.e(orderNum.toString(), "orderNum")
-                        runOnUiThread {
-                            setRecyclerView()
+                        orderNum = reader.readLine().trim()
+                        if (!list.contains(orderNum)) {
+                            list.add(orderNum)
+                            Log.e(list.toString(), "list")
+                            Log.e(orderNum.toString(), "orderNum")
+                            runOnUiThread {
+                                setRecyclerView()
+                            }
+                        } else {
+                            val writer: PrintWriter = PrintWriter(output, true)
+                            writer.println("overlap")
+                            //여기까지 작업하다 말음 오버랩 뜸.
                         }
-                    } else {
-                        val writer: PrintWriter = PrintWriter(output, true)
-                        writer.println("overlap")
-                        //여기까지 작업하다 말음 오버랩 뜸.
                     }
-
-
-
-                }
-        } catch(e: Exception) {
-            e.printStackTrace()
+            } catch(e: Exception) {
+                e.printStackTrace()
         }
     }
 
