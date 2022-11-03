@@ -1,55 +1,49 @@
 package com.example.callview
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Display
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main2.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
-import java.util.*
-import kotlin.concurrent.schedule
 
 
 class MainActivity2 : AppCompatActivity() {
 
     var list: ArrayList<String> = ArrayList()
-    lateinit var v_fllipper: ViewFlipper
-    var mHandler: Handler = Handler()
+    private lateinit var textSlide: TextView
+    private lateinit var v_fllipper: ViewFlipper
+    var standardSize_X: Int? = null
+    var standardSize_Y: Int? = null
+    var density: Float? = null
+
+    var mHandler: Handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val textBox = findViewById<TextView>(R.id.textBox)
-
-//        var list: ArrayList<String> = ArrayList()
-//        for(i in 1 until 10) {
-//            list.add(String.format("TEXT %d", i))
-//            Log.e(i.toString(), "번째 작동")
-//        }
-        
-        // 텍스트 슬라이드
-        val textSlide: TextView = findViewById(R.id.bottomText)
-            textSlide.isSelected = true
-
         //가로모드고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         setContentView(R.layout.activity_main2)
+
 
         val images = intArrayOf(
             R.drawable.did_img1,
@@ -65,13 +59,44 @@ class MainActivity2 : AppCompatActivity() {
             fllipperImages(image)
         }
 
+        // 텍스트 슬라이드
+        textSlide = findViewById(R.id.bottomText)
+        textSlide.isSelected = true
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.e(list.toString(), "Adapter로 넘어가기 전 list의 수")
 
         thread()
+        getStandardSize()
+    }
+
+    // 스크린 크기값
+    fun getScreenSize(activity: Activity): Point {
+        val display: Display = activity.windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+
+        Log.e("getScreenSize", "실행")
+        return size
+    }
+
+    fun getStandardSize() {
+        Log.e("getStandardSize", "실행")
+        val ScreenSize: Point = getScreenSize(this)
+        density = resources.displayMetrics.density
+
+        standardSize_X = (ScreenSize.x / density!!).toInt()
+        standardSize_Y = (ScreenSize.y / density!!).toInt()
+
+        bottomText.textSize = (standardSize_X!! / 1).toFloat()
+        bottomText.textSize = (standardSize_Y!! / 10).toFloat()
 
     }
-        // 이미지 슬라이더 구현 메서드
+
+
+
+    // 이미지 슬라이더 구현 메서드
+    @SuppressLint("SuspiciousIndentation")
     private fun fllipperImages(image: Int) {
         val imageView: ImageView = ImageView(this)
                 imageView.setBackgroundResource(image)

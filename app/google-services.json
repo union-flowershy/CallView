@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "237816224457",
+    "project_id": "callview-40791",
+    "storage_bucket": "callview-40791.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237816224457:android:cef7659ee85b08d509cb18",
+        "android_client_info": {
+          "package_name": "com.example.callview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237816224457-qege18urm7pfdgnrgbja6ptj5f9jv5p8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.callview",
+            "certificate_hash": "c17475e78710e44698ee1488e5b2b547362cf681"
+          }
+        },
+        {
+          "client_id": "237816224457-1fmnba81d89b349jc9fid923b6rnjq7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ7lQQ7INiysffTk8w-1ra1WT9EOaToZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237816224457-1fmnba81d89b349jc9fid923b6rnjq7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
