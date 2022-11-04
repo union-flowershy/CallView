@@ -14,10 +14,14 @@ import android.view.Display
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main2.*
 import java.io.BufferedReader
 import java.io.InputStream
@@ -34,6 +38,7 @@ class MainActivity2 : AppCompatActivity() {
     var standardSize_X: Int? = null
     var standardSize_Y: Int? = null
     var density: Float? = null
+    private var auth : FirebaseAuth? = null // Firebase 이메일
 
     var mHandler: Handler = Handler(Looper.getMainLooper())
 
@@ -44,6 +49,7 @@ class MainActivity2 : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         setContentView(R.layout.activity_main2)
 
+        auth = Firebase.auth // Firebase 이메일
 
         val images = intArrayOf(
             R.drawable.did_img1,
@@ -88,9 +94,30 @@ class MainActivity2 : AppCompatActivity() {
         standardSize_X = (ScreenSize.x / density!!).toInt()
         standardSize_Y = (ScreenSize.y / density!!).toInt()
 
-        bottomText.textSize = (standardSize_X!! / 1).toFloat()
-        bottomText.textSize = (standardSize_Y!! / 10).toFloat()
+        bottomText.textSize = (standardSize_X!!/1).toFloat()
+        bottomText.textSize = (standardSize_Y!!/11).toFloat()
 
+    }
+
+    // 파이어베이스 로그인 구현
+    private fun createAccount(email: String, password: String) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            auth?.createUserWithEmailAndPassword(email, password)
+                ?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this, "계정 생성 완료.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish() // 가입창 종료
+                    } else {
+                        Toast.makeText(
+                            this, "계정 생성 실패",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
     }
 
 
