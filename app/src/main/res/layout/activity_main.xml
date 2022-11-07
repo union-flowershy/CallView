@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black2"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity3">
 
     <ViewFlipper
         android:id="@+id/image_slide"
