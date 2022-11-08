@@ -7,32 +7,51 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
 
 class MyAdapter(
-        private val context: Context,
-        private val list: ArrayList<String>): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+                private val context: Context
+              , firestore: FirebaseFirestore
+              , uid: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val textbox: TextView = itemView.textBox
+    var resultDTOs: ArrayList<ResultDTO> = arrayListOf()
+
+
+    init {
+        firestore.collection(uid).orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                resultDTOs.clear()
+                Log.e("MyAdapter init", "실행")
+                if (querySnapshot == null) return@addSnapshotListener
+
+                // 데이터 받아오기
+                for (snapshot in querySnapshot.documents) {
+                    val item = snapshot.toObject(ResultDTO::class.java)
+                    resultDTOs.add(item!!)
+                }
+                notifyDataSetChanged()
+            }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item, parent, false)
+        return CustomViewHolder(view)
+    }
+
+    inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val viewHolder = (holder as CustomViewHolder).itemView
+            viewHolder.textBox.text = resultDTOs[position].callNumber
     }
 
     override fun getItemCount(): Int {
-        Log.e(list.size.toString(), "getItemCount 작동")
-        return list.size
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.recyclerview_item,parent, false)
-        return MyViewHolder(itemView)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val callview = list[position]
-        holder.textbox.text = callview
-        Log.e(callview.toString(), "onBindViewHolder 작동")
-        Log.e(holder.toString(), "onBindViewHolder 작동")
+        return resultDTOs.size
     }
 
 }

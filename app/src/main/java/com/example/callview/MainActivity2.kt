@@ -137,7 +137,7 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     fun setRecyclerView() {
-        recyclerView.adapter = MyAdapter(this, list)
+        recyclerView.adapter = MyAdapter2(this, list)
     }
 
 }

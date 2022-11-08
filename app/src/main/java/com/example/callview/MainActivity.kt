@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Display
 import android.view.View
@@ -15,12 +13,9 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main2.*
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.PrintWriter
-import java.net.Socket
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     var standardSize_X: Int? = null
     var standardSize_Y: Int? = null
     var density: Float? = null
-    var mHandler: Handler = Handler(Looper.getMainLooper())
+    private var firestore : FirebaseFirestore? = null
+    private var uid : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +54,12 @@ class MainActivity : AppCompatActivity() {
         textSlide = findViewById(R.id.bottomText)
         textSlide.isSelected = true
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        Log.e(list.toString(), "Adapter로 넘어가기 전 list의 수")
+        // Firebase 초기화
+        uid = FirebaseAuth.getInstance().currentUser?.uid
+        firestore = FirebaseFirestore.getInstance()
 
-        thread()
         getStandardSize()
+        setRecyclerView()
     }
 
     // 스크린 크기값
@@ -87,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         bottomText.textSize = (standardSize_Y!!/11).toFloat()
     }
 
-
     // 이미지 슬라이더 구현 메서드
     @SuppressLint("SuspiciousIndentation")
     private fun fllipperImages(image: Int) {
@@ -101,43 +97,11 @@ class MainActivity : AppCompatActivity() {
                     v_fllipper.setOutAnimation(this,android.R.anim.slide_out_right)
     }
 
-    private fun thread() {
-        val thread: Thread = NetworkThread()
-        Log.e("소켓연결 확인", thread.toString())
-        thread.start()
-        Log.e("소켓연결 시작", thread.toString())
-    }
-
-    inner class NetworkThread: Thread() {
-        override fun run() = try {
-            val socket: Socket = Socket("192.168.10.19", 55555)
-//            val socket: Socket = Socket("192.168.1.164", 55555)
-            val output = socket.getOutputStream()
-            val input: InputStream = socket.getInputStream()
-            val reader: BufferedReader = BufferedReader(InputStreamReader(input))
-            var orderNum: String
-                while(true) {
-                        orderNum = reader.readLine().trim()
-                        if (!list.contains(orderNum)) {
-                            list.add(orderNum)
-                            Log.e(list.toString(), "list")
-                            Log.e(orderNum.toString(), "orderNum")
-                            runOnUiThread {
-                                setRecyclerView()
-                            }
-                        } else {
-                            val writer: PrintWriter = PrintWriter(output, true)
-                            writer.println("overlap")
-                            //여기까지 작업하다 말음 오버랩 뜸.
-                        }
-                    }
-            } catch(e: Exception) {
-                e.printStackTrace()
-        }
-    }
 
     fun setRecyclerView() {
-        recyclerView.adapter = MyAdapter(this, list)
+        Log.e("setRecyclerView", "실행")
+        recyclerView.adapter = MyAdapter(this, firestore!!, uid!!)
+        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
 }
