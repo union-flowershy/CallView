@@ -7,15 +7,20 @@ import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.Display
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main2.*
+import kotlinx.android.synthetic.main.main.*
+import kotlinx.android.synthetic.main.main_toolbar.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     var density: Float? = null
     private var firestore : FirebaseFirestore? = null
     private var uid : String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +64,40 @@ class MainActivity : AppCompatActivity() {
         uid = FirebaseAuth.getInstance().currentUser?.uid
         firestore = FirebaseFirestore.getInstance()
 
+        // 환경설정 메뉴바 생성
+        setSupportActionBar(main_layout_toolbar)    // 툴바를 액티비티의 앱바로 지정
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)   // 드로어를 꺼낼 홈 버튼 활성화
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.list_large)  // 홈버튼 이미지 변경
+        supportActionBar?.setDisplayShowTitleEnabled(false)     // 툴바에 타이틀 안보이게 설정
+//        main_navigationView?.setNavigationItemSelectedListener(this)
+
         getStandardSize()
         setRecyclerView()
+    }
+
+    // 액션바 생성
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {  // 메뉴버튼
+                main_drawer_layout.openDrawer(GravityCompat.START)  // 네비게이션 드로어 열기
+            }
+            R.id.account -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // 액션바 닫기
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if(main_drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            main_drawer_layout.closeDrawers()
+            //테스트용
+            Toast.makeText(this,"back btn clicked", Toast.LENGTH_SHORT).show()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     // 스크린 크기값

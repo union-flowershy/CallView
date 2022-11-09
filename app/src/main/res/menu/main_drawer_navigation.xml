@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item android:id="@+id/account"
+    android:icon="@drawable/chat"
+    android:title="@string/background_color"/>
+
+<item android:id="@+id/item2"
+     android:icon="@drawable/chat"
+     android:title="@string/menu_account"/>
+
+<item android:id="@+id/item3"
+     android:icon="@drawable/chat"
+     android:title="@string/menu_account"/>
+</menu>

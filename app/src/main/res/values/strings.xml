@@ -9,4 +9,8 @@
     <string name="Join">Join</string>
     <string name="PW">PW</string>
     <string name="ID">ID</string>
+    <string name="background_color">color</string>
+    <string name="menu_account">account</string>
+    <string name="option">option</string>
+    <string name="homepage">homepage</string>
 </resources>

@@ -13,4 +13,7 @@
     <color name="noColor">#00FFFFFF</color>
     <color name="noColor2">#1900FF15</color>
     <color name="green">#1ECC2C</color>
+    <color name="sky">#FF018786</color>
+    <color name="hex0">#1B000000</color>
+    <color name="hex1">#00000000</color>
 </resources>
