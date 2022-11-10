@@ -76,5 +76,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0' // NavigationView
 
     // 색상 선택 라이브러리
-    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation 'com.github.novatien:SmartColorPicker:1.0.2'
 }

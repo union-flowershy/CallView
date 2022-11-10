@@ -2,7 +2,9 @@ package com.example.callview
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData.Item
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
@@ -17,29 +19,26 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_main2.*
+import com.nvt.color.ColorPickerDialog
+import kotlinx.android.synthetic.main.activity_main2.bottomText
+import kotlinx.android.synthetic.main.activity_main2.recyclerView
 import kotlinx.android.synthetic.main.main.*
+import kotlinx.android.synthetic.main.main_layout.*
 import kotlinx.android.synthetic.main.main_toolbar.*
-import yuku.ambilwarna.AmbilWarnaDialog
-
 
 class MainActivity : AppCompatActivity() {
 
     var list: ArrayList<String> = ArrayList()
     private lateinit var textSlide: TextView
+    var openColor: Button? = null
+    var setColorBtn: Button? = null
     private lateinit var v_fllipper: ViewFlipper
     var standardSize_X: Int? = null
     var standardSize_Y: Int? = null
     var density: Float? = null
     private var firestore : FirebaseFirestore? = null
     private var uid : String? = null
-    var backColor: Int? = null
-
-    // 환경설정 저장
-
-    // 색상선택 호출
-
-
+    var backColor: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,15 +77,15 @@ class MainActivity : AppCompatActivity() {
 //        main_navigationView?.setNavigationItemSelectedListener(this)
 
         // 환경설정 기본값
-        backColor = ContextCompat.getColor(this, R.color.sky)
+        backColor = ContextCompat.getColor(this, R.color.sky).toString()
 
-        // 환경설정 저장
-        val setColorBtn = findViewById<Button>(R.id.setBtn)
-        setColorBtn.setOnClickListener(btnListener)
+//        // 환경설정 저장
+//        setColorBtn = findViewById<Button>(R.id.setBtn)
+//        setColorBtn!!.setOnClickListener(btnListener)
 
         // 색상선택 호출
-        val openColor = findViewById<Button>(R.id.account)
-        openColor.setOnClickListener(btnListener)
+        openColor = findViewById(R.id.account) as Button?
+        openColor?.setOnClickListener(btnListener)
 
         getStandardSize()
         setRecyclerView()
@@ -101,8 +100,19 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.account -> {
                 
-//                val colorPicker: AmbilWarnaDialog = AmbilWarnaDialog(this, backColor!!)
+                //여기 수정해야함
+                Log.e("account", "클릭")
+                val colorPicker = ColorPickerDialog(this, Color.BLACK, true, object : ColorPickerDialog.OnColorPickerListener {
+                    override fun onCancel(dialog: ColorPickerDialog?) {
+                        // handle click button Cancel
+                    }
 
+                    override fun onOk(dialog: ColorPickerDialog?, color: Int) {
+                        // handle click button OK
+                        bojobackground.setBackgroundColor(color)
+                    }
+                })
+                colorPicker.show()
             }
         }
     }

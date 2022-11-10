@@ -49,11 +49,11 @@ class LoginActivity : AppCompatActivity()  {
 
     }
 
-    // 로그아웃하지 않을 시 자동 로그인 , 회원가입시 바로 로그인 됨
-//    public override fun onStart() {
-//        super.onStart()
-//        moveMainPage(auth?.currentUser)
-//    }
+//     로그아웃하지 않을 시 자동 로그인 , 회원가입시 바로 로그인 됨
+    public override fun onStart() {
+        super.onStart()
+        moveMainPage(auth?.currentUser)
+    }
 
     // 유저정보 넘겨주고 메인 액티비티 호출
     fun moveMainPage(user: FirebaseUser?){
