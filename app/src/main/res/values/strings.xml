@@ -12,5 +12,6 @@
     <string name="background_color">color</string>
     <string name="menu_account">account</string>
     <string name="option">option</string>
-    <string name="homepage">homepage</string>
+    <string name="homepage">www.unionpos.co.kr</string>
+    <string name="setButton">저장</string>
 </resources>

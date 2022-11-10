@@ -72,7 +72,6 @@
         <!-- 툴바 -->
         <include layout="@layout/main_toolbar"/>
 
-
     </FrameLayout>
 
 

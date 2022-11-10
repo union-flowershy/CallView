@@ -24,4 +24,5 @@
         app:menu="@menu/main_drawer_navigation">
 
     </com.google.android.material.navigation.NavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

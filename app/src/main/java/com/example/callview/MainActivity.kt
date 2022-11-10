@@ -9,11 +9,10 @@ import android.util.Log
 import android.view.Display
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewFlipper
+import android.view.View.OnClickListener
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.main.*
 import kotlinx.android.synthetic.main.main_toolbar.*
+import yuku.ambilwarna.AmbilWarnaDialog
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +33,12 @@ class MainActivity : AppCompatActivity() {
     var density: Float? = null
     private var firestore : FirebaseFirestore? = null
     private var uid : String? = null
+    var backColor: Int? = null
+
+    // 환경설정 저장
+
+    // 색상선택 호출
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         //가로모드고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        setContentView(R.layout.activity_main2)
+        setContentView(R.layout.main)
 
         val images = intArrayOf(
             R.drawable.did_img1,
@@ -71,9 +77,36 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)     // 툴바에 타이틀 안보이게 설정
 //        main_navigationView?.setNavigationItemSelectedListener(this)
 
+        // 환경설정 기본값
+        backColor = ContextCompat.getColor(this, R.color.sky)
+
+        // 환경설정 저장
+        val setColorBtn = findViewById<Button>(R.id.setBtn)
+        setColorBtn.setOnClickListener(btnListener)
+
+        // 색상선택 호출
+        val openColor = findViewById<Button>(R.id.account)
+        openColor.setOnClickListener(btnListener)
+
         getStandardSize()
         setRecyclerView()
     }
+
+    // 저장버튼 클릭시
+    var btnListener = OnClickListener { view ->
+        when(view.id) {
+            R.id.setBtn -> {
+                val optionDTO = OptionDTO()
+                optionDTO.backColor = ""
+            }
+            R.id.account -> {
+                
+//                val colorPicker: AmbilWarnaDialog = AmbilWarnaDialog(this, backColor!!)
+
+            }
+        }
+    }
+
 
     // 액션바 생성
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
