@@ -9,5 +9,7 @@ data class OptionDTO(
 //
 //        // 나중에 구현
 //       ,var slide_backColor: Int? = null   // 백그라운드_이미지 슬라이드
+
+
         
 )

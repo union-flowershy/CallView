@@ -78,4 +78,6 @@ dependencies {
 
     // 색상 선택 라이브러리
     implementation 'com.github.novatien:SmartColorPicker:1.0.2'
+
+
 }
