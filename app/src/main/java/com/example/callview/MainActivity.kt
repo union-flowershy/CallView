@@ -25,6 +25,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.nvt.color.ColorPickerDialog
 import kotlinx.android.synthetic.main.activity_main2.bottomText
@@ -125,16 +126,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             //데이터 가져오기 // 여러번 하는 이유는 querySnapshot documents에서 주문번호까지 전부다 for문을 돌려서 그럼 그래서 null값이 반영됨
             //이 부분만 해결해서 데이터를 찾아오면 될 듯
             for (snapshot in querySnapshot.documents) {
-                val item = snapshot.toObject(OptionDTO::class.java)
-                optionDTOs.add(item!!)
+
+                if(!snapshot.equals(null) && !snapshot.equals("null")) {
+                    val item = snapshot.toObject(OptionDTO::class.java)
+                    optionDTOs.add(item!!)
+
 
 //                recyclerBackground.setBackgroundColor(optionDTOs2.recycler_backColor!!)
-                Log.e("item", item.toString())
-                Log.e(optionDTOs[0].recycler_backColor.toString(), "")
+                    Log.e("item", item.toString())
+                    Log.e(optionDTOs[0].recycler_backColor.toString(), "")
 
 
 //                recyclerBackground.setBackgroundColor(optionDTOs)
-
+                } else {}
             }
         }
 
