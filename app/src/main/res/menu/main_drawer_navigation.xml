@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 <item android:id="@+id/account"
-    android:icon="@drawable/chat"
-    android:title="@string/background_color"/>
+      android:icon="@drawable/chat"
+      android:title="@string/recycler_backColor"/>
 
-<item android:id="@+id/item2"
-     android:icon="@drawable/chat"
-     android:title="@string/menu_account"/>
+<item android:id="@+id/recycler_textBoxColor"
+      android:icon="@drawable/chat"
+      android:title="@string/recycler_textBoxColor"/>
 
-<item android:id="@+id/item3"
-     android:icon="@drawable/chat"
-     android:title="@string/menu_account"/>
+<item android:id="@+id/recycler_textColor"
+      android:icon="@drawable/chat"
+      android:title="@string/recycler_textColor"/>
+
+<item android:id="@+id/recycler_textSize"
+      android:icon="@drawable/chat"
+      android:title="@string/recycler_textSize"
+      app:showAsAction="never"
+      >
+      <menu>
+          <item
+              android:id="@+id/sub1"
+              android:checkable="true"
+              android:title="12사이즈"
+              app:showAsAction="never"
+              >
+          </item>
+          <item
+              android:id="@+id/sub2"
+              android:checkable="true"
+              android:title="13사이즈"
+              app:showAsAction="never"
+              >
+          </item>
+          <item
+              android:id="@+id/sub3"
+              android:checkable="true"
+              android:title="14사이즈"
+              app:showAsAction="never"
+              >
+          </item>
+          <item
+              android:id="@+id/sub4"
+              android:checkable="true"
+              android:title="15사이즈"
+              app:showAsAction="never"
+              >
+          </item>
+      </menu>
+</item>
+
+<item android:id="@+id/bottom_textComent"
+      android:icon="@drawable/chat"
+      android:title="@string/bottom_textComent"/>
+
 </menu>

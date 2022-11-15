@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.hardware.input.InputManager
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -42,9 +45,16 @@ class LoginActivity : AppCompatActivity()  {
         auth = Firebase.auth //파이어베이스 가입
 
         //텍스트 바깥 레이아웃 클릭시 키보드 사라짐
-        activityMain.setOnTouchListener(View.OnTouchListener { v, event ->
-            hideKeyboard()
-            false
+//        activityMain.setOnTouchListener(View.OnTouchListener { v, event ->
+//            hideKeyboard()
+//            false
+//        })
+        activityMain.setOnTouchListener(object: View.OnTouchListener {
+            override fun onTouch(view: View?, event: MotionEvent?): Boolean {
+                hideKeyboard()
+                return false;
+            }
+
         })
 
     }
@@ -64,13 +74,25 @@ class LoginActivity : AppCompatActivity()  {
     }
 
     //텍스트 바깥 레이아웃 클릭시 키보드 사라짐
+//    fun hideKeyboard() {
+//        val inputManager =
+//            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        inputManager.hideSoftInputFromWindow(
+//            this.currentFocus!!.windowToken,
+//            InputMethodManager.HIDE_NOT_ALWAYS
+//        )
+//    }
+
     fun hideKeyboard() {
-        val inputManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(
-            this.currentFocus!!.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
-        )
+            val inputManager: InputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+                try {
+                    inputManager.hideSoftInputFromWindow(
+                        this.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
     }
 
     // 파이어베이스 회원가입 구현

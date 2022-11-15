@@ -4,13 +4,17 @@
     <string name="textview">고객님 음식이</string>
     <string name="textview2">준비되었습니다.</string>
     <string name="_100">100</string>
-    <string name="bottomText">저희 매장을 찾아주셔서 감사합니다.        저희 매장을 찾아주셔서 감사합니다.        </string>
+    <string name="bottomText"> </string>
     <string name="Login">Login</string>
     <string name="Join">Join</string>
     <string name="PW">PW</string>
     <string name="ID">ID</string>
-    <string name="background_color">color</string>
-    <string name="menu_account">account</string>
+    <string name="recycler_backColor">호출화면 배경 색상</string>
+    <string name="recycler_textBoxColor">주문번호 배경 색상</string>
+    <string name="recycler_textColor">주문번호 글자 색상</string>
+    <string name="recycler_textSize">주문번호 글자크기</string>
+    <string name="bottom_textComent">하단 안내 문구</string>
+
     <string name="option">option</string>
     <string name="homepage">www.unionpos.co.kr</string>
     <string name="setButton">저장</string>

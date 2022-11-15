@@ -2,6 +2,7 @@ package com.example.callview
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.Point
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.system.Os.uname
 import android.util.Log
 import android.view.Display
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -22,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -33,6 +38,7 @@ import kotlinx.android.synthetic.main.activity_main2.recyclerView
 import kotlinx.android.synthetic.main.main.*
 import kotlinx.android.synthetic.main.main_layout.*
 import kotlinx.android.synthetic.main.main_toolbar.*
+import org.w3c.dom.Text
 import kotlin.math.log
 
 
@@ -49,6 +55,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var auth : FirebaseAuth? = null
     private var uid: String? = null
     var backColor: Int? = null
+    val itemList = arrayListOf<OptionDTO>()
+    val result = arrayListOf<OptionDTO>()
 
 
     private lateinit var openColor: Button
@@ -62,7 +70,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var databaseRef: DatabaseReference
 
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance()
+
+    private var recyclerTextBoxColor: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,9 +116,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayShowTitleEnabled(false)     // 툴바에 타이틀 안보이게 설정
 //        main_navigationView?.setNavigationItemSelectedListener(this)
 
-//        // 환경설정 기본값
-//        backColor = ContextCompat.getColor(this, R.color.sky)
-
+        //레이아웃 가져오기
+        val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view: View = inflater.inflate(R.layout.recyclerview_item, null)
+            recyclerTextBoxColor = view.findViewById(R.id.textBox) as TextView
 
 
         getStandardSize()
@@ -119,30 +131,55 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun onStartOption2() {
 
-        firestore?.collection(auth!!.currentUser!!.uid)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+        val setOp = db.collection(auth!!.currentUser!!.uid).document("OPTION")
 
-            if(querySnapshot == null) return@addSnapshotListener
+        setOp.addSnapshotListener(EventListener<DocumentSnapshot> { snapshot, e ->
+            if(snapshot != null && snapshot.exists()) {
+                val recycler_backColor = snapshot.data!!["recycler_backColor"].toString()
+                val recycler_textBoxColor = snapshot.data!!["recycler_textBoxColor"].toString()
+                val recycler_textColor = snapshot.data!!["recycler_textColor"].toString()
 
-            //데이터 가져오기 // 여러번 하는 이유는 querySnapshot documents에서 주문번호까지 전부다 for문을 돌려서 그럼 그래서 null값이 반영됨
-            //이 부분만 해결해서 데이터를 찾아오면 될 듯
-            for (snapshot in querySnapshot.documents) {
+                optionDTOs2.recycler_backColor = recycler_backColor.toInt()
+                optionDTOs2.recycler_textBoxColor = recycler_textBoxColor.toInt()
+                optionDTOs2.recycler_textColor = recycler_textColor.toInt()
 
-                if(!snapshot.equals(null) && !snapshot.equals("null")) {
-                    val item = snapshot.toObject(OptionDTO::class.java)
-                    optionDTOs.add(item!!)
+                recyclerBackground.setBackgroundColor(optionDTOs2.recycler_backColor!!)
+                recyclerTextBoxColor!!.setBackgroundColor(optionDTOs2.recycler_textBoxColor!!)
+                recyclerTextBoxColor!!.setTextColor(optionDTOs2.recycler_textColor!!)
 
+                Log.e("recycler_backColor", optionDTOs2.recycler_backColor.toString())
+                Log.e("recycler_textBoxColor", optionDTOs2.recycler_textBoxColor.toString())
+                Log.e("recycler_textColor", optionDTOs2.recycler_textColor.toString())
+                Log.e("recyclerTextBoxColor", recyclerTextBoxColor.toString())
 
-//                recyclerBackground.setBackgroundColor(optionDTOs2.recycler_backColor!!)
-                    Log.e("item", item.toString())
-                    Log.e(optionDTOs[0].recycler_backColor.toString(), "")
-
-
-//                recyclerBackground.setBackgroundColor(optionDTOs)
-                } else {}
             }
-        }
-
+        })
     }
+
+
+//    private fun onStartOption2() {
+//
+//        firestore?.collection(auth!!.currentUser!!.uid)
+//            ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+//                optionDTOs.clear()
+//                if(querySnapshot == null) return@addSnapshotListener
+//
+//                //데이터 가져오기 // 여러번 하는 이유는 querySnapshot documents에서 주문번호까지 전부다 for문을 돌려서 그럼 그래서 null값이 반영됨
+//                //이 부분만 해결해서 데이터를 찾아오면 될 듯
+//
+//                    for(snapshot in querySnapshot.documents) {
+//                        val item = snapshot.toObject(OptionDTO::class.java)
+//                        val item2 = snapshot.data["OPTION"]?.toString()
+//                        optionDTOs.add(item!!)
+//
+//                        Log.e("item2", item2.toString())
+//                        Log.e("querySnapshot", querySnapshot.toString())
+//                        Log.e("snapshot", snapshot.toString())
+//                        Log.e("item", item.toString())
+//
+//                    }
+//                }
+//    }
 
     fun openSetBtn() {
         // 환경설정 저장
@@ -154,12 +191,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        setColorBtn2.setOnClickListener(btnListener)
 
         val navigationView: NavigationView = findViewById(R.id.main_navigationView)
+
         val headerView: View = navigationView.getHeaderView(0)
-        val setColorButton: Button = headerView.findViewById(R.id.setColorBtn)
-            setColorButton.setOnClickListener(btnListener)
+
+        val setColorButton: Button = headerView.findViewById(R.id.setColorBtn) as Button
+
+                setColorButton.setOnClickListener(btnListener)
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
         when (item.itemId) {
             R.id.account -> {
                 val colorPicker = ColorPickerDialog(
@@ -175,16 +217,66 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             Log.e(color.toString(), "color 컬러값 확인")
 
                             val strColor = color
-                            val optionColor = strColor.toString().replace(("[^\\d.]").toRegex(), "")
-
+                            val optionColor = strColor.toString()
+                            Log.e(recyclerTextBoxColor.toString(), "recyclerTextBoxColor")
                             recyclerBackground.setBackgroundColor(optionColor.toInt())
                             optionDTOs2.recycler_backColor = optionColor.toInt()
-
 
                         }
                     })
                 colorPicker.show()
             }
+            R.id.recycler_textBoxColor -> {
+                val colorPicker = ColorPickerDialog(
+                    this,
+                    Color.BLACK,
+                    true,
+                    object : ColorPickerDialog.OnColorPickerListener {
+                        override fun onCancel(dialog: ColorPickerDialog?) {
+                            // handle click button Cancel
+                        }
+                        override fun onOk(dialog: ColorPickerDialog?, color: Int) {
+                            // handle click button OK
+                            Log.e(color.toString(), "color 컬러값 확인")
+
+                            val strColor = color
+                            val optionColor = strColor.toString()
+
+                            recyclerTextBoxColor!!.setBackgroundColor(optionColor.toInt())
+                            optionDTOs2.recycler_textBoxColor = optionColor.toInt()
+
+                        }
+                    })
+                colorPicker.show()
+            }
+            R.id.recycler_textColor -> {
+                val colorPicker = ColorPickerDialog(
+                    this,
+                    Color.BLACK,
+                    true,
+                    object : ColorPickerDialog.OnColorPickerListener {
+                        override fun onCancel(dialog: ColorPickerDialog?) {
+                            // handle click button Cancel
+                        }
+                        override fun onOk(dialog: ColorPickerDialog?, color: Int) {
+                            // handle click button OK
+                            Log.e(color.toString(), "color 컬러값 확인")
+
+                            val strColor = color
+                            val optionColor = strColor.toString()
+
+                            recyclerTextBoxColor!!.setTextColor(optionColor.toInt())
+                            optionDTOs2.recycler_textColor = optionColor.toInt()
+
+                        }
+                    })
+                colorPicker.show()
+            }
+            R.id.recycler_textSize -> {
+
+            }
+
+//
 
         }
         return false
@@ -201,11 +293,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 resultDTO.uid = auth?.currentUser?.uid
 
                 Log.e(resultDTO.uid.toString(), "uid 확인")
-                firestore?.collection(auth!!.currentUser!!.uid)?.document("OPTION")?.set(optionDTOs2)
 
-                Log.e("setBtn2", "클릭2")
+                if(!optionDTOs2.recycler_backColor?.equals(null)!! && !optionDTOs2.recycler_textColor?.equals(null)!! && !optionDTOs2.recycler_textBoxColor?.equals(null)!!) {
+
+                    firestore?.collection(auth!!.currentUser!!.uid)?.document("OPTION")
+                        ?.set(optionDTOs2)
+
+                    Log.e("setBtn2", "클릭2")
 //                databaseRefeence.child("recycler_backColor").push().setValue(optionDTOs.recycler_backColor)
-                Log.e(optionDTOs2.recycler_backColor.toString(), "optionDTOs")
+                    Log.e(optionDTOs2.recycler_backColor.toString(), "optionDTOs")
+
+                }
             }
         }
     }
@@ -277,7 +375,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recyclerView.adapter = MyAdapter(this, firestore!!, uid!!)
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
-
-
 
 }

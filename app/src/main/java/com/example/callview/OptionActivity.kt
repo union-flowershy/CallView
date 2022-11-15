@@ -58,9 +58,7 @@ class OptionActivity  : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     })
                 colorPicker.show()
             }
-            R.id.item2 -> {
 
-            }
         }
         return false
     }
